@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <style>
+            #oUl li ul{
+                display: none;
+            }
+            #oUl li ul.show{
+                display: block;
+            }
+            #oUl li ul.hide{
+                display: none;
+            }
+            #oUl li h3 span{
+                padding: 0px 10px;
+            }
+            li{
+                list-style: none;
+            }
+        </style>
+
+    </head>
+
+<body>
+    <ul id="oUl">
+        <!-- <li>
+            <h1><span>+</span>第一级菜单</h1>
+            <ul>
+                <li>
+                    <h1>第二集菜单</h1>
+                </li>
+            </ul>
+        </li> -->
+    </ul>
+</body>
+<script>
+var arr = [
+{
+    title : "第一级菜单",
+    child : [
+        {title:"第二集菜单"},
+        {title:"第二集菜单",
+         child:[
+                {title:"第三集菜单"},
+                {title:"第三集菜单",
+                child:[
+                    {title:"第四集菜单"},
+                    {title:"第四集菜单"},
+                    {title:"第四集菜单"}
+                ]
+                },
+                {title:"第三集菜单"}
+            ]
+        },
+        {title:"第二集菜单",
+         child:[
+            {title:"第三集菜单"},
+            {title:"第三集菜单"}
+            ]
+        }
+    ]
+},
+{
+    title : "第一级菜单",
+    child : [
+        {title:"第二集菜单"},
+        {title:"第二集菜单",
+        child:[
+                {title:"第三集菜单"},
+                {title:"第三集菜单",
+                child:[
+                    {title:"第四集菜单"},
+                    {title:"第四集菜单"},
+                    {title:"第四集菜单"}
+                ]
+                },
+                {title:"第三集菜单"}
+            ]
+        },
+        {title:"第二集菜单",
+         child:[
+                {title:"第三集菜单"},
+                {title:"第三集菜单"}
+            ]
+        }
+    ]
+},
+{
+    title:"第一集菜单",
+    child:[
+        {title:"第二集菜单"},
+        {title:"第二集菜单"}
+    ]
+},
+];
+// {title:"第三集菜单",
+//  child:[
+//        {title:"第四集菜单"},
+//        {title:"第四集菜单"},
+//        {title:"第四集菜单"}
+//        ]
+//  },
+// <li>
+//     <h3><span>+</span>第一级菜单</h3>
+//     <ul>
+//         <li>
+//             <h1>第二集菜单</h1>
+//         </li>
+//     </ul>
+// </li>    
+ 
+var oUl = document.getElementById("oUl");
+var aLi = document.getElementsByTagName("li");
+
+for (var i = 0; i < arr.length; i++) {
+    newLi(i, oUl, arr[i]);
+}
+
+//每个从li开始的内容生成：eachNode:当前节点：
+function newLi(n, objParent, eachNode) {
+    var li = document.createElement("li");
+    objParent.appendChild(li);
+    if (eachNode.title) {
+        // console.log(eachNode.title);
+        // alert(1);
+        var h3 = document.createElement("h3");
+        h3.innerHTML = eachNode.title;
+        h3.open = false;
+        var span = document.createElement("span");
+        if (eachNode.child) {
+            span.innerHTML = "+";
+            h3.onclick = function() {
+                // console.log(this.open);
+                if (!this.open) {
+                    console.log(eachNode);
+                    // console.log(eachNode.title);
+                    this.getElementsByTagName("span")[0].innerHTML = "-";
+                    this.nextElementSibling.style.display = "block";
+                    this.open = true;
+                } else { //如果是打开的；
+                    this.getElementsByTagName("span")[0].innerHTML = "+";
+                    this.nextElementSibling.style.display = "none";
+                    this.open = false;
+                    var childH3 = this.nextElementSibling.getElementsByTagName("h3");
+                    for (var k = 0; k < childH3.length; k++) {
+                        if (childH3[k].nextElementSibling) {
+                            childH3[k].getElementsByTagName("span")[0].innerHTML = "+";
+                            console.log(childH3[k].nextElementSibling);
+                            childH3[k].nextElementSibling.style.display = "none";
+                            childH3[k].open = false;
+                        }
+                    }
+                }
+            }
+        } else {
+            span.innerHTML = "";
+        }
+        h3.appendChild(span);
+        li.appendChild(h3);
+    }
+    if (eachNode.child) {
+        var ul = document.createElement("ul");
+        // console.log(eachNode.child);
+        eachNode = eachNode.child;
+        for (var j = 0; j < eachNode.length; j++) {
+            newLi(j, ul, eachNode[j]);
+        }
+        li.appendChild(ul);
+    }
+}
+
+</script>
